@@ -12,6 +12,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { AppEffects } from './store/effects';
+import { appStateReducerMap, IAppState } from './store/state';
 
 @NgModule({
   declarations: [AppComponent, CalendarComponent, EventDialogComponent],
@@ -26,6 +30,8 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
     MatDatepickerModule,
     ReactiveFormsModule,
     FormsModule,
+    StoreModule.forRoot<IAppState>(appStateReducerMap),
+    EffectsModule.forRoot(AppEffects),
   ],
   providers: [],
   bootstrap: [AppComponent],
