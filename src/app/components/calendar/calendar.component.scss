@@ -1,0 +1,45 @@
+.calendar {
+  text-align: center;
+  font-family: sans-serif;
+
+  nav {
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+    h2 {
+      margin: 0 auto 0 0;
+    }
+
+    button {
+      cursor: pointer;
+      background-color: transparent;
+      border: 0;
+      font-size: 20px;
+    }
+  }
+
+  ol {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    li {
+      padding: 16px;
+      color: black;
+      font-weight: bold;
+      &.days-of-week {
+        background-color: blue;
+        color: white;
+      }
+      &.sibling-month {
+        font-weight: normal;
+        color: rgba(black, 0.4);
+        cursor: default;
+      }
+      &.current-month {
+        cursor: pointer;
+      }
+    }
+  }
+}

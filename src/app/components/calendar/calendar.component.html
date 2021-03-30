@@ -1,0 +1,36 @@
+<div class="calendar">
+  <nav>
+    <h2>{{ calendar.currentMonth.value | date: "MMMM, yyyy" }}</h2>
+    <div>
+      <button (click)="prevMonth()" class="btn-prev">&lt;</button>
+      <button (click)="nextMonth()" class="btn-next">&gt;</button>
+    </div>
+  </nav>
+  <ol>
+    <li *ngFor="let dayName of daysOfWeek" class="days-of-week">
+      {{ dayName }}
+    </li>
+
+    <li
+      *ngFor="let prev of calendar.previousMonth.days"
+      (click)="prevMonth()"
+      class="sibling-month"
+    >
+      <span>{{ prev }}</span>
+    </li>
+
+    <li
+      *ngFor="let current of calendar.currentMonth.days"
+      class="current-month"
+    >
+      <span>{{ current }}</span>
+    </li>
+    <li
+      *ngFor="let next of calendar.nextMonth.days"
+      (click)="nextMonth()"
+      class="sibling-month"
+    >
+      <span>{{ next }}</span>
+    </li>
+  </ol>
+</div>
