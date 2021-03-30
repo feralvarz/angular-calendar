@@ -1,5 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import * as moment from 'moment';
+import {
+  EventDialogComponent,
+  IDialogData,
+} from '../event-dialog/event-dialog.component';
 
 interface IMonth {
   value?: moment.Moment;
@@ -35,6 +40,8 @@ export class CalendarComponent implements OnInit {
     'Friday',
     'Saturday',
   ];
+
+  constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {
     const currentMonth = new Date();
@@ -76,6 +83,27 @@ export class CalendarComponent implements OnInit {
     this.fillCalendar(
       this.calendar.currentMonth.value.add(1, 'month').toDate()
     );
+  }
+
+  addEvent() {
+    const data: IDialogData = {
+      selectedDate: new Date(),
+      eventData: {
+        reminder: 'Lorem Ipsum Data',
+        city: 'Miami',
+        color: '#ff9900',
+      },
+    };
+    const dialogRef = this.dialog.open(EventDialogComponent, {
+      width: '400px',
+      data,
+    });
+
+    dialogRef.afterClosed().subscribe({
+      next: (result) => {
+        console.log('Dialog closed');
+      },
+    });
   }
 
   /**

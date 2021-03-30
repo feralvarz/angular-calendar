@@ -21,6 +21,7 @@
 
     <li
       *ngFor="let current of calendar.currentMonth.days"
+      (click)="addEvent()"
       class="current-month"
     >
       <span>{{ current }}</span>
