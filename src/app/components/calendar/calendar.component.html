@@ -1,6 +1,6 @@
 <div class="calendar">
   <nav>
-    <h2>{{ calendar.currentMonth.value | date: "MMMM, yyyy" }}</h2>
+    <h2>{{ calendar.currentMonth.value.format("MMMM, yyyy") }}</h2>
     <div>
       <button (click)="prevMonth()" class="btn-prev">&lt;</button>
       <button (click)="nextMonth()" class="btn-next">&gt;</button>

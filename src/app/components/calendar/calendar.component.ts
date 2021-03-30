@@ -5,6 +5,11 @@ import {
   EventDialogComponent,
   IDialogData,
 } from '../event-dialog/event-dialog.component';
+import { Store } from '@ngrx/store';
+
+import { CalendarActions } from '../../store/calendar/calendar.actions';
+import { CalendarState } from 'src/app/store/selectors';
+import { IAppState } from 'src/app/store/state';
 
 interface IMonth {
   value?: moment.Moment;
@@ -41,11 +46,15 @@ export class CalendarComponent implements OnInit {
     'Saturday',
   ];
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog, private store: Store<IAppState>) {}
 
   ngOnInit(): void {
     const currentMonth = new Date();
     this.fillCalendar(currentMonth);
+
+    this.store.select(CalendarState.selectEvents).subscribe({
+      next: (state) => console.log(state),
+    });
   }
 
   fillCalendar(date: Date) {
@@ -86,6 +95,7 @@ export class CalendarComponent implements OnInit {
   }
 
   addEvent() {
+    this.store.dispatch(CalendarActions.increment());
     const data: IDialogData = {
       selectedDate: new Date(),
       eventData: {
