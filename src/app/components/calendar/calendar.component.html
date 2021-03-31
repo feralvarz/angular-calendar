@@ -20,11 +20,22 @@
     </li>
 
     <li
-      *ngFor="let current of calendar.currentMonth.days"
-      (click)="addEvent()"
+      *ngFor="let current of calendar.currentMonth.days | keyvalue: unsorted"
+      (click)="addEvent(current.value)"
       class="current-month"
     >
-      <span>{{ current }}</span>
+      <span>{{ current.value.dayNumber }}</span>
+      <ng-container *ngIf="current.value.events as events">
+        <ul>
+          <li
+            *ngFor="let ev of events | sortBy: 'asc':'time'"
+            [style.--bgcolor]="ev.color"
+          >
+            <div class="time">{{ ev.time }}</div>
+            {{ ev.reminder }}
+          </li>
+        </ul>
+      </ng-container>
     </li>
     <li
       *ngFor="let next of calendar.nextMonth.days"

@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as moment from 'moment';
 import {
@@ -10,6 +15,25 @@ import { Store } from '@ngrx/store';
 import { CalendarActions } from '../../store/calendar/calendar.actions';
 import { CalendarState } from 'src/app/store/selectors';
 import { IAppState } from 'src/app/store/state';
+import { tap } from 'rxjs/operators';
+import { JsUtils } from '../../store/utils';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { combineLatest } from 'rxjs/internal/observable/combineLatest';
+import {
+  ICalendarState,
+  IEventsState,
+} from 'src/app/store/calendar/calendar.state';
+
+export interface IMonthInfo {
+  monthId: string;
+  dayId: string;
+}
+
+interface IDayDetail {
+  id: string;
+  dayNumber: number;
+  events: number[];
+}
 
 interface IMonth {
   value?: moment.Moment;
@@ -17,9 +41,14 @@ interface IMonth {
   days: number[];
 }
 
+interface ICurrentMonth extends Omit<IMonth, 'days'> {
+  monthId: string;
+  days: IDayDetail[];
+}
+
 interface ICalendar {
   previousMonth: IMonth;
-  currentMonth: IMonth;
+  currentMonth: ICurrentMonth;
   nextMonth: IMonth;
 }
 
@@ -32,48 +61,99 @@ interface ICalendar {
 export class CalendarComponent implements OnInit {
   calendar: ICalendar = {
     previousMonth: { days: [] },
-    currentMonth: { days: [] },
+    currentMonth: { monthId: '', days: [] },
     nextMonth: { days: [] },
   };
 
-  daysOfWeek: string[] = [
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-  ];
+  daysOfWeek: string[] = [];
 
-  constructor(private dialog: MatDialog, private store: Store<IAppState>) {}
+  /**
+   * Behavior subject to update calendar pipe after changes in navigation
+   */
+  calendarUpdated$: BehaviorSubject<any> = new BehaviorSubject({});
+
+  /**
+   * Observable from store state
+   */
+  calEventsStore$: Observable<IEventsState> = this.store.select(
+    CalendarState.selectEvents
+  );
+
+  constructor(
+    private dialog: MatDialog,
+    private store: Store<IAppState>,
+    private cd: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     const currentMonth = new Date();
+    this.daysOfWeek = moment(currentMonth).localeData().weekdays();
     this.fillCalendar(currentMonth);
 
-    this.store.select(CalendarState.selectEvents).subscribe({
-      next: (state) => console.log(state),
-    });
+    combineLatest([this.calEventsStore$, this.calendarUpdated$])
+      .pipe(
+        tap(([state]) => {
+          const cal = { ...this.calendar };
+          const id = cal.currentMonth.monthId;
+          const eventsInMonth = state.byMonthId[id]?.days;
+
+          // If there are events for current month
+          if (eventsInMonth) {
+            // Add events to day in calendar
+            const daysCopy = { ...cal.currentMonth.days };
+
+            for (const [day, ev] of Object.entries(eventsInMonth)) {
+              const dayEvents = ev.map((evId: number) => state.byId[evId]);
+
+              daysCopy[day].events = dayEvents;
+            }
+
+            cal.currentMonth.days = daysCopy;
+            this.calendar = { ...cal };
+            this.cd.markForCheck();
+          }
+        })
+      )
+      .subscribe();
   }
 
-  fillCalendar(date: Date) {
+  /**
+   * Builds days of current month in Calendar
+   *
+   * @param date Date object as reference to build calendar days
+   */
+  fillCalendar(date: Date): void {
     this.calendar.previousMonth.days = [];
     this.calendar.nextMonth.days = [];
 
-    this.calendar.currentMonth.value = moment(date);
-    const from = moment(date).startOf('month');
+    const value = moment(date);
+    const monthId = value.format('MM/YYYY');
+
+    const from = value.startOf('month');
     const to = from.clone().endOf('month');
     const dayCount = to.clone().add(1, 'day').diff(from, 'days');
 
-    // Creates an array from [1,...,n] days
-    this.calendar.currentMonth.days = Array.from(
-      Array(dayCount),
-      (x, i) => i + 1
-    );
+    const days = Array.from(Array(dayCount), (x, i) => {
+      const dayNumber = i + 1;
+      const id = `${value.format('MM')}/${dayNumber}`;
+      const newData = {
+        id,
+        dayNumber,
+        events: null,
+      };
+
+      return newData;
+    });
+
+    this.calendar.currentMonth = {
+      monthId,
+      value,
+      days: JsUtils.arrayToObject(days, 'id'),
+    };
 
     this.fillPreviousDays(from);
     this.fillNextDays(to);
+    this.calendarUpdated$.next('calendar updated');
   }
 
   /**
@@ -94,15 +174,24 @@ export class CalendarComponent implements OnInit {
     );
   }
 
-  addEvent() {
-    this.store.dispatch(CalendarActions.increment());
+  /**
+   * Compare fn to return original order of days
+   *
+   * @param value from pipe
+   */
+  unsorted(value) {
+    return value;
+  }
+
+  addEvent(value: IDayDetail) {
+    // Setting current time for dialog
+    const date = new Date();
+    date.setMonth(this.calendar.currentMonth.value.month());
+    date.setFullYear(this.calendar.currentMonth.value.year());
+    date.setDate(value.dayNumber);
+
     const data: IDialogData = {
-      selectedDate: new Date(),
-      eventData: {
-        reminder: 'Lorem Ipsum Data',
-        city: 'Miami',
-        color: '#ff9900',
-      },
+      selectedDate: moment(date),
     };
     const dialogRef = this.dialog.open(EventDialogComponent, {
       width: '400px',
@@ -110,14 +199,21 @@ export class CalendarComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe({
-      next: (result) => {
-        console.log('Dialog closed');
+      next: (event) => {
+        if (event) {
+          const byMonthInfo: IMonthInfo = {
+            monthId: this.calendar.currentMonth.monthId,
+            dayId: value.id,
+          };
+          this.store.dispatch(CalendarActions.newEvent({ event, byMonthInfo }));
+        }
       },
     });
   }
 
   /**
    * Fills empty spaces in calendar before current month
+   *
    * @param from first day of current month used to calculate days
    */
   private fillPreviousDays(from: moment.Moment): void {
@@ -132,6 +228,7 @@ export class CalendarComponent implements OnInit {
 
   /**
    * Fills empty spaces in calendar after current month
+   *
    * @param to Last day of current month used to calculate days
    */
   private fillNextDays(to: moment.Moment): void {

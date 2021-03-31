@@ -9,13 +9,15 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import * as moment from 'moment';
 
 export interface IEventData {
+  id: number;
   reminder: string;
   city: string;
   color: string;
+  time: string;
 }
 
 export interface IDialogData {
-  selectedDate: Date;
+  selectedDate: moment.Moment;
   eventData?: IEventData | null;
 }
 
@@ -47,6 +49,10 @@ export class EventDialogComponent implements OnInit {
     return this.eventForm.get('date');
   }
 
+  get timeField() {
+    return this.eventForm.get('time');
+  }
+
   constructor(
     public dialogRef: MatDialogRef<EventDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IDialogData,
@@ -61,10 +67,35 @@ export class EventDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  /**
+   * Closes the dialog and return an event by using dialogRef
+   *
+   */
+  handleSubmit(): void {
+    const { reminder, city, color, date, time } = this.eventForm.value;
+    const dateStr: string = date.format('MM/DD/YYYY');
+    const dateRef = moment(`${dateStr} ${time}`);
+
+    const event: IEventData = {
+      id: dateRef.unix(),
+      reminder,
+      city,
+      color,
+      time,
+    };
+
+    this.dialogRef.close(event);
+  }
+
+  /**
+   * Setup event form with default values or values passed in dialog data
+   */
   private setupForm(): void {
-    const selectedDate = moment(this.data.selectedDate);
-    const { reminder = '', city = '', color = '#ff9900' } =
+    const selectedDate = this.data.selectedDate;
+    const { reminder = '', city = '', color = this.defaultColor() } =
       this.data?.eventData || {};
+
+    const time = `${selectedDate.hour()}:${selectedDate.format('mm')}`;
 
     this.eventForm = this.formBuilder.group({
       reminder: [
@@ -74,6 +105,15 @@ export class EventDialogComponent implements OnInit {
       city: [city, { validators: [Validators.required] }],
       color: [color, { validators: [Validators.required] }],
       date: [selectedDate, { validators: [Validators.required] }],
+      time: [time, { validators: [Validators.required] }],
     });
+  }
+
+  /**
+   * Generates a random color
+   */
+  private defaultColor() {
+    const color = Math.floor(0x1000000 * Math.random()).toString(16);
+    return `#${color}`;
   }
 }

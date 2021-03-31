@@ -1,6 +1,5 @@
 import { createSelector } from '@ngrx/store';
 import { IAppState } from './state';
-import { JsUtils } from './utils';
 
 // Calendar State
 export const selectCalendarState = (state: IAppState) => state.calendarState;

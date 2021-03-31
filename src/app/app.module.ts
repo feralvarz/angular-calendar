@@ -16,9 +16,10 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './store/effects';
 import { appStateReducerMap, IAppState } from './store/state';
+import { SortByPipe } from './pipes/sort-by.pipe';
 
 @NgModule({
-  declarations: [AppComponent, CalendarComponent, EventDialogComponent],
+  declarations: [AppComponent, CalendarComponent, EventDialogComponent, SortByPipe],
   imports: [
     BrowserModule,
     AppRoutingModule,
