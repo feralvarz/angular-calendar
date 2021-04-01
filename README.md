@@ -1,5 +1,11 @@
 # CalendarApp Coding Challenge
 
+## Demo
+
+URL: [Calendar Coding Challenge](https://feral-dev-demo-calendar-app.herokuapp.com/)
+
+**Note:** [Read CORS section](#cors).
+
 ## Description
 
 This project is designed to test your knowledge of front-end web technologies and assess the ability to create front-end UI products with attention to details, cross-browser compatibility, standards, and reusability.
@@ -48,7 +54,19 @@ Run `npm install` from root folder.
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
+**Note:** [Read CORS section](#cors).
+
+## <a name="cors">🙃</a> Cors
+
 **Note:** You will need a proxy to get rid of CORS errors while doing requests to weather api.
+
+I used `Allow CORS: Access-Control-Allow-Origin` to solve CORS, both local and production.
+
+### Links
+
+- [Allow-Cors Chrome extension](https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf)
+
+- [Allow-Cors how to use](https://mybrowseraddon.com/access-control-allow-origin.html)
 
 ## Build
 
