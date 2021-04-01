@@ -28,7 +28,7 @@ export interface IMonthInfo {
   dayId: string;
 }
 
-interface IDayDetail {
+export interface IDayDetail {
   id: string;
   dayNumber: number;
   events: number[];
@@ -79,7 +79,7 @@ export class CalendarComponent implements OnInit {
   );
 
   constructor(
-    private dialog: MatDialog,
+    public dialog: MatDialog,
     private store: Store<IAppState>,
     private cd: ChangeDetectorRef
   ) {}

@@ -1,0 +1,13 @@
+{
+  "byId": {
+    "1618471800": {
+      "id": 1618471800,
+      "reminder": "Event One",
+      "city": "Barcelona",
+      "color": "#00b3ff",
+      "time": "08:30",
+      "woeid": 753692
+    }
+  },
+  "byMonthId": { "04/2021": { "days": { "04/15": [1618471800] } } }
+}
