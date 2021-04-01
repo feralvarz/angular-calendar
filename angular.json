@@ -17,6 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": ["lodash", "rxjs/internal/observable/combineLatest"],
             "outputPath": "dist/calendarApp",
             "index": "src/index.html",
             "main": "src/main.ts",

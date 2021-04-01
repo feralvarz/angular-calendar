@@ -4,87 +4,78 @@
 <mat-dialog-content>
   <form [formGroup]="eventForm" autocomplete="off">
     <input type="hidden" autocomplete="false" />
-    <div style="margin-bottom: 10px">
-      <mat-form-field class="form-field">
-        <mat-label>Reminder</mat-label>
-        <input
-          #reminder
-          type="text"
-          name="reminder-field"
-          matInput
-          [formControl]="reminderField"
-        />
-        <mat-hint align="end">{{ 30 - reminder.value.length }}</mat-hint>
 
-        <mat-error *ngIf="reminderField.errors?.maxlength">
-          30 characters max
-        </mat-error>
-        <mat-error *ngIf="reminderField.errors?.required">
-          Required field
-        </mat-error>
-      </mat-form-field>
+    <mat-form-field class="form-field">
+      <mat-label>Reminder</mat-label>
+      <input
+        #reminder
+        type="text"
+        name="reminder-field"
+        matInput
+        [formControl]="reminderField"
+      />
+      <mat-hint align="end">{{ 30 - reminder.value.length }}</mat-hint>
 
-      <mat-form-field class="form-field">
-        <mat-label>Date</mat-label>
-        <input
-          #date
-          matInput
-          [matDatepicker]="picker"
-          [formControl]="dateField"
-        />
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
+      <mat-error *ngIf="reminderField.errors?.maxlength">
+        30 characters max
+      </mat-error>
+      <mat-error *ngIf="reminderField.errors?.required">
+        Required field
+      </mat-error>
+    </mat-form-field>
 
-      <mat-form-field class="form-field">
-        <mat-label>Time</mat-label>
-        <input
-          type="time"
-          name="time-field"
-          matInput
-          [formControl]="timeField"
-        />
-        <mat-error *ngIf="timeField.errors?.required">
-          Required field
-        </mat-error>
-      </mat-form-field>
+    <mat-form-field class="form-field">
+      <mat-label>Date</mat-label>
+      <input
+        #date
+        matInput
+        [matDatepicker]="picker"
+        [formControl]="dateField"
+        [disabled]="dialogAction === 'CREATE'"
+      />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
 
-      <mat-form-field class="form-field">
-        <mat-label>City</mat-label>
-        <input
-          type="text"
-          name="city-field"
-          matInput
-          [formControl]="cityField"
-          [matAutocomplete]="cities"
-        />
-        <mat-error *ngIf="cityField.errors?.required">
-          Required field
-        </mat-error>
-        <mat-autocomplete #cities="matAutocomplete">
-          <mat-option
-            *ngFor="let option of locations$ | async"
-            [value]="option.title"
-            (click)="updateWeatherInfo(option)"
-          >
-            {{ option.title }}
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
+    <mat-form-field class="form-field">
+      <mat-label>Time</mat-label>
+      <input type="time" name="time-field" matInput [formControl]="timeField" />
+      <mat-error *ngIf="timeField.errors?.required"> Required field </mat-error>
+    </mat-form-field>
 
-      <mat-form-field class="form-field color">
-        <mat-label>Event Color</mat-label>
-        <input
-          type="color"
-          name="color-field"
-          matInput
-          [formControl]="colorField"
-        />
-        <mat-error *ngIf="colorField.errors?.required">
-          Required field
-        </mat-error>
-      </mat-form-field>
-    </div>
+    <mat-form-field class="form-field">
+      <mat-label>City</mat-label>
+      <input
+        type="text"
+        name="city-field"
+        matInput
+        [formControl]="cityField"
+        [matAutocomplete]="cities"
+      />
+      <mat-error *ngIf="cityField.errors?.required"> Required field </mat-error>
+      <mat-autocomplete #cities="matAutocomplete">
+        <mat-option
+          *ngFor="let option of locations$ | async"
+          [value]="option.title"
+          (click)="updateWeatherInfo(option)"
+        >
+          {{ option.title }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field class="form-field color">
+      <mat-label>Event Color</mat-label>
+      <input
+        type="color"
+        name="color-field"
+        matInput
+        [formControl]="colorField"
+      />
+      <mat-error *ngIf="colorField.errors?.required">
+        Required field
+      </mat-error>
+    </mat-form-field>
   </form>
   <div *ngIf="weatherInfo$ | async as w" class="weather-info">
     <div class="weather-meta" *ngIf="w.weather">
