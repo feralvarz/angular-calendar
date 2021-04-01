@@ -272,6 +272,15 @@ export class CalendarComponent implements OnInit {
               );
             }
           }
+
+          if (result.action === 'DELETE') {
+            this.store.dispatch(
+              CalendarActions.deleteEvent({
+                id: result.originalID,
+                byMonthInfo,
+              })
+            );
+          }
         }
       },
     });

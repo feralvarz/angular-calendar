@@ -18,7 +18,7 @@ import {
 } from 'rxjs/operators';
 import { CalendarService, ICity } from 'src/app/services/calendar.service';
 
-type DialogAction = 'EDIT' | 'CREATE';
+type DialogAction = 'EDIT' | 'CREATE' | 'DELETE';
 
 export interface IEventData {
   id: number;
@@ -26,6 +26,7 @@ export interface IEventData {
   city: string;
   color: string;
   time: string;
+  woeid: number;
 }
 
 export interface IDialogData {
@@ -35,8 +36,8 @@ export interface IDialogData {
 
 export interface IEventDialogResult {
   action: DialogAction;
-  event: IEventData;
-  originalID: number;
+  event?: IEventData;
+  originalID?: number;
 }
 
 @Component({
@@ -89,10 +90,13 @@ export class EventDialogComponent implements OnInit, AfterViewInit {
     this.setupForm();
 
     this.weatherInfo$ = this.whereOnEarthId$.pipe(
-      skip(1),
       filter((id) => !!id),
       switchMap((id) => this.service.getLocationWeather(id))
     );
+
+    if (this.dialogAction === 'EDIT') {
+      this.whereOnEarthId$.next(this.data.eventData.woeid);
+    }
   }
 
   ngAfterViewInit() {
@@ -126,6 +130,7 @@ export class EventDialogComponent implements OnInit, AfterViewInit {
       city,
       color,
       time,
+      woeid: this.whereOnEarthId$.value,
     };
 
     const result: IEventDialogResult = {
@@ -135,6 +140,13 @@ export class EventDialogComponent implements OnInit, AfterViewInit {
     };
 
     this.dialogRef.close(result);
+  }
+
+  handleDelete() {
+    this.dialogRef.close({
+      action: 'DELETE',
+      originalID: this.data?.eventData?.id,
+    });
   }
 
   /**

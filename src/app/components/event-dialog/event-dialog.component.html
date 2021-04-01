@@ -88,7 +88,7 @@
   </form>
   <div *ngIf="weatherInfo$ | async as w" class="weather-info">
     <div class="weather-meta" *ngIf="w.weather">
-      <img width="40" height="40" [src]="w.icon" [alt]="w.alt" />
+      <img width="32" height="32" [src]="w.icon" [alt]="w.alt" />
       <span class="temperature"
         >{{ w.temperature | number: "1.0-0" }}<sup>°C</sup></span
       >
@@ -102,10 +102,19 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
+  <button
+    *ngIf="dialogAction === 'EDIT'"
+    mat-button
+    color="warn"
+    class="delete-button"
+    (click)="handleDelete()"
+  >
+    Delete
+  </button>
   <button mat-button mat-dialog-close>Cancel</button>
   <button
     [disabled]="!eventForm.valid"
-    mat-button
+    mat-raised-button
     color="primary"
     (click)="handleSubmit()"
   >
