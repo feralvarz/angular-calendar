@@ -28,6 +28,7 @@
     "@ngrx/effects": "^11.0.1",
     "@ngrx/store": "^11.0.1",
     "express": "^4.17.1",
+    "jasmine-auto-spies": "^6.9.3",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "path": "^0.12.7",

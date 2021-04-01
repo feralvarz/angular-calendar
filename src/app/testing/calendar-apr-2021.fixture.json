@@ -1,0 +1,171 @@
+{
+    "previousMonth": {
+        "days": [
+            28,
+            29,
+            30,
+            31
+        ]
+    },
+    "currentMonth": {
+        "monthId": "04/2021",
+        "value": "2021-03-31T23:00:00.000Z",
+        "days": {
+            "04/1": {
+                "id": "04/1",
+                "dayNumber": 1,
+                "events": null
+            },
+            "04/2": {
+                "id": "04/2",
+                "dayNumber": 2,
+                "events": null
+            },
+            "04/3": {
+                "id": "04/3",
+                "dayNumber": 3,
+                "events": null
+            },
+            "04/4": {
+                "id": "04/4",
+                "dayNumber": 4,
+                "events": null
+            },
+            "04/5": {
+                "id": "04/5",
+                "dayNumber": 5,
+                "events": null
+            },
+            "04/6": {
+                "id": "04/6",
+                "dayNumber": 6,
+                "events": null
+            },
+            "04/7": {
+                "id": "04/7",
+                "dayNumber": 7,
+                "events": null
+            },
+            "04/8": {
+                "id": "04/8",
+                "dayNumber": 8,
+                "events": null
+            },
+            "04/9": {
+                "id": "04/9",
+                "dayNumber": 9,
+                "events": null
+            },
+            "04/10": {
+                "id": "04/10",
+                "dayNumber": 10,
+                "events": null
+            },
+            "04/11": {
+                "id": "04/11",
+                "dayNumber": 11,
+                "events": null
+            },
+            "04/12": {
+                "id": "04/12",
+                "dayNumber": 12,
+                "events": null
+            },
+            "04/13": {
+                "id": "04/13",
+                "dayNumber": 13,
+                "events": null
+            },
+            "04/14": {
+                "id": "04/14",
+                "dayNumber": 14,
+                "events": null
+            },
+            "04/15": {
+                "id": "04/15",
+                "dayNumber": 15,
+                "events": null
+            },
+            "04/16": {
+                "id": "04/16",
+                "dayNumber": 16,
+                "events": null
+            },
+            "04/17": {
+                "id": "04/17",
+                "dayNumber": 17,
+                "events": null
+            },
+            "04/18": {
+                "id": "04/18",
+                "dayNumber": 18,
+                "events": null
+            },
+            "04/19": {
+                "id": "04/19",
+                "dayNumber": 19,
+                "events": null
+            },
+            "04/20": {
+                "id": "04/20",
+                "dayNumber": 20,
+                "events": null
+            },
+            "04/21": {
+                "id": "04/21",
+                "dayNumber": 21,
+                "events": null
+            },
+            "04/22": {
+                "id": "04/22",
+                "dayNumber": 22,
+                "events": null
+            },
+            "04/23": {
+                "id": "04/23",
+                "dayNumber": 23,
+                "events": null
+            },
+            "04/24": {
+                "id": "04/24",
+                "dayNumber": 24,
+                "events": null
+            },
+            "04/25": {
+                "id": "04/25",
+                "dayNumber": 25,
+                "events": null
+            },
+            "04/26": {
+                "id": "04/26",
+                "dayNumber": 26,
+                "events": null
+            },
+            "04/27": {
+                "id": "04/27",
+                "dayNumber": 27,
+                "events": null
+            },
+            "04/28": {
+                "id": "04/28",
+                "dayNumber": 28,
+                "events": null
+            },
+            "04/29": {
+                "id": "04/29",
+                "dayNumber": 29,
+                "events": null
+            },
+            "04/30": {
+                "id": "04/30",
+                "dayNumber": 30,
+                "events": null
+            }
+        }
+    },
+    "nextMonth": {
+        "days": [
+            1
+        ]
+    }
+}

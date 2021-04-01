@@ -166,7 +166,10 @@ export class EventDialogComponent implements OnInit, AfterViewInit {
       ],
       city: [city, { validators: [Validators.required] }],
       color: [color, { validators: [Validators.required] }],
-      date: [selectedDate, { validators: [Validators.required] }],
+      date: [
+        { value: selectedDate, disabled: this.dialogAction === 'CREATE' },
+        { validators: [Validators.required] },
+      ],
       time: [time, { validators: [Validators.required] }],
     });
   }

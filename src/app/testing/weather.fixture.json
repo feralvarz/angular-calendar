@@ -1,0 +1,9 @@
+{
+    "title": "Santa Cruz",
+    "weather": "Light Cloud",
+    "temperature": 24.775,
+    "time": "2021-04-01T03:30:37.649139-07:00",
+    "parent": "California",
+    "icon": "//www.metaweather.com/static/img/weather/png/64/lc.png",
+    "alt": "Icon showing weather conditions Light Cloud in Santa Cruz"
+}
