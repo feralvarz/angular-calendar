@@ -23,7 +23,7 @@ The goal of this exercise is to create a demo calendar application using React, 
 - Ability to edit reminders – including changing text, city, day, time and color.
 - Add a weather service call from a free API, and get the weather forecast (ex. Rain) for the date of the calendar reminder based on the city.
 - Unit test the functionality: Ability to add a new "reminder" (max 30 chars) for a user
-  entered day and time. Also, include a city. `(pending feature)`
+  entered day and time. Also, include a city.
 
 ### Bonus (Optional)
 
@@ -31,6 +31,9 @@ The goal of this exercise is to create a demo calendar application using React, 
 - Properly handle overflow when multiple reminders appear on the same date.
 - Functionality to delete one reminder for a specific day
 - Functionality to delete ALL the reminders for a specific day `(pending feature)`
+- Autocomplete feature for cities input `(extra)`
+- Styles to Weather section `(extra)`
+- Unit tests for every component `(extra)`
 
 ### Considerations
 
