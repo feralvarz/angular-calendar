@@ -17,10 +17,18 @@ import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './store/effects';
 import { appStateReducerMap, IAppState } from './store/state';
 import { SortByPipe } from './pipes/sort-by.pipe';
+import { CalendarService } from './services/calendar.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  declarations: [AppComponent, CalendarComponent, EventDialogComponent, SortByPipe],
+  declarations: [
+    AppComponent,
+    CalendarComponent,
+    EventDialogComponent,
+    SortByPipe,
+  ],
   imports: [
+    HttpClientModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -34,7 +42,7 @@ import { SortByPipe } from './pipes/sort-by.pipe';
     StoreModule.forRoot<IAppState>(appStateReducerMap),
     EffectsModule.forRoot(AppEffects),
   ],
-  providers: [],
+  providers: [CalendarService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
