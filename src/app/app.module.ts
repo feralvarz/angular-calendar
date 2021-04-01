@@ -12,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './store/effects';
@@ -37,6 +38,7 @@ import { HttpClientModule } from '@angular/common/http';
     MatButtonModule,
     MatMomentDateModule,
     MatDatepickerModule,
+    MatAutocompleteModule,
     ReactiveFormsModule,
     FormsModule,
     StoreModule.forRoot<IAppState>(appStateReducerMap),

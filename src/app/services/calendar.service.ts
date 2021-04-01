@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map, pluck } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 export interface ICity {
   latt_long: string;
@@ -11,15 +11,27 @@ export interface ICity {
 }
 
 export interface ICurrentWeather {
+  title: string;
   weather: string;
   icon: string;
+  alt: string;
+}
+
+export interface ILocationWeather {
+  consolidated_weather: {
+    weather_state_abbr: string;
+    weather_state_name: string;
+    [key: string]: any;
+  }[];
+  title: string;
+  [key: string]: any;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class CalendarService {
-  private readonly BASE = '//www.metaweather.com/api/';
+  private readonly BASE = '//www.metaweather.com/api';
   constructor(private httpClient: HttpClient) {}
 
   public getCities(query: string): Observable<ICity[]> {
@@ -27,22 +39,41 @@ export class CalendarService {
     const params = new HttpParams({
       fromString: `query=${query}`,
     });
-    return this.httpClient.get<ICity[]>(url, { params });
+    return this.httpClient
+      .get<ICity[]>(url, { params })
+      .pipe(catchError(() => of([])));
   }
 
   public getLocationWeather(woeid: number): Observable<ICurrentWeather> {
     const url = `${this.BASE}/location/${woeid}`;
 
-    return this.httpClient.get<any[]>(url).pipe(
-      pluck('consolidated_weather'),
+    return this.httpClient.get<ILocationWeather>(url).pipe(
       map((forecast) => {
-        const { weather_state_abbr, weather_state_name, ...rest } = forecast[0];
+        const { consolidated_weather, title, parent, time } = forecast;
+        const {
+          weather_state_abbr,
+          weather_state_name,
+          the_temp,
+        } = consolidated_weather[0];
 
         return {
+          title,
           weather: weather_state_name,
-          icon: `https://www.metaweather.com/static/img/weather/png/64/${weather_state_abbr}.png`,
+          temperature: the_temp,
+          time,
+          parent: parent.title,
+          icon: `//www.metaweather.com/static/img/weather/png/64/${weather_state_abbr}.png`,
+          alt: `Icon showing weather conditions ${weather_state_name} in ${title}`,
         };
-      })
+      }),
+      catchError(() =>
+        of({
+          title: 'Location not found',
+          weather: null,
+          icon: null,
+          alt: null,
+        })
+      )
     );
   }
 }

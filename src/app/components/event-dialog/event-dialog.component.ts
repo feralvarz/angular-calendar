@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   Inject,
@@ -7,6 +8,15 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import * as moment from 'moment';
+import { Observable, BehaviorSubject } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  skip,
+  switchMap,
+} from 'rxjs/operators';
+import { CalendarService, ICity } from 'src/app/services/calendar.service';
 
 type DialogAction = 'EDIT' | 'CREATE';
 
@@ -35,7 +45,7 @@ export interface IEventDialogResult {
   styleUrls: ['./event-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EventDialogComponent implements OnInit {
+export class EventDialogComponent implements OnInit, AfterViewInit {
   dialogAction: DialogAction;
 
   /**
@@ -63,15 +73,38 @@ export class EventDialogComponent implements OnInit {
     return this.eventForm.get('time');
   }
 
+  locations$: Observable<ICity[]>;
+  weatherInfo$: Observable<any>;
+  whereOnEarthId$: BehaviorSubject<number> = new BehaviorSubject(0);
+
   constructor(
     public dialogRef: MatDialogRef<EventDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IDialogData,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private service: CalendarService
   ) {}
 
   ngOnInit() {
     this.dialogAction = this.data?.eventData ? 'EDIT' : 'CREATE';
     this.setupForm();
+
+    this.weatherInfo$ = this.whereOnEarthId$.pipe(
+      skip(1),
+      filter((id) => !!id),
+      switchMap((id) => this.service.getLocationWeather(id))
+    );
+  }
+
+  ngAfterViewInit() {
+    this.locations$ = this.cityField.valueChanges.pipe(
+      debounceTime(1000),
+      distinctUntilChanged(),
+      switchMap((query: string) => this.service.getCities(query))
+    );
+  }
+
+  updateWeatherInfo(city: ICity) {
+    this.whereOnEarthId$.next(city.woeid);
   }
 
   onNoClick(): void {

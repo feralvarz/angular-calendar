@@ -6,3 +6,33 @@
     border: none;
   }
 }
+
+.weather {
+  &-info {
+    display: grid;
+    grid-template-columns: 1fr auto;
+  }
+  &-meta {
+    .temperature {
+      font-size: 24px;
+      margin-left: 8px;
+      sup {
+        font-size: 0.4em;
+      }
+    }
+  }
+  &-location {
+    text-align: right;
+    & > * {
+      margin-bottom: 0;
+    }
+    h2 {
+      line-height: 1;
+      font-size: 18px;
+    }
+    p {
+      color: rgb(124, 124, 124);
+      font-size: 12px;
+    }
+  }
+}

@@ -21,10 +21,7 @@ import { tap } from 'rxjs/operators';
 import { JsUtils } from '../../store/utils';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { combineLatest } from 'rxjs/internal/observable/combineLatest';
-import {
-  ICalendarState,
-  IEventsState,
-} from 'src/app/store/calendar/calendar.state';
+import { IEventsState } from 'src/app/store/calendar/calendar.state';
 
 export interface IMonthInfo {
   monthId: string;

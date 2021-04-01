@@ -56,10 +56,20 @@
           name="city-field"
           matInput
           [formControl]="cityField"
+          [matAutocomplete]="cities"
         />
         <mat-error *ngIf="cityField.errors?.required">
           Required field
         </mat-error>
+        <mat-autocomplete #cities="matAutocomplete">
+          <mat-option
+            *ngFor="let option of locations$ | async"
+            [value]="option.title"
+            (click)="updateWeatherInfo(option)"
+          >
+            {{ option.title }}
+          </mat-option>
+        </mat-autocomplete>
       </mat-form-field>
 
       <mat-form-field class="form-field color">
@@ -76,6 +86,19 @@
       </mat-form-field>
     </div>
   </form>
+  <div *ngIf="weatherInfo$ | async as w" class="weather-info">
+    <div class="weather-meta" *ngIf="w.weather">
+      <img width="40" height="40" [src]="w.icon" [alt]="w.alt" />
+      <span class="temperature"
+        >{{ w.temperature | number: "1.0-0" }}<sup>°C</sup></span
+      >
+    </div>
+    <div class="weather-location">
+      <h2>{{ w.title }}, {{ w.parent }}</h2>
+      <p>{{ w.time | date: "EEEE, h:mm a" }}</p>
+      <p>{{ w.weather }}</p>
+    </div>
+  </div>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
