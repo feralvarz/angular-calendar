@@ -1,14 +1,54 @@
-# CalendarApp
+# CalendarApp Coding Challenge
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.9.
+## Description
+
+This project is designed to test your knowledge of front-end web technologies and assess the ability to create front-end UI products with attention to details, cross-browser compatibility, standards, and reusability.
+
+## Assignment
+
+The goal of this exercise is to create a demo calendar application using React, Vue or Angular.
+
+### Mandatory Features
+
+- Ability to add a new "reminder" (max 30 chars) for a user entered day and time. Also,
+  include a city.
+- Display reminders on the calendar view in the correct time order
+- Allow the user to select color when creating a reminder and display it appropriately.
+- Ability to edit reminders – including changing text, city, day, time and color.
+- Add a weather service call from a free API, and get the weather forecast (ex. Rain) for the date of the calendar reminder based on the city.
+- Unit test the functionality: Ability to add a new "reminder" (max 30 chars) for a user
+  entered day and time. Also, include a city. `(pending feature)`
+
+### Bonus (Optional)
+
+- Expand the calendar to support more than the current month.
+- Properly handle overflow when multiple reminders appear on the same date.
+- Functionality to delete one reminder for a specific day
+- Functionality to delete ALL the reminders for a specific day `(pending feature)`
+
+### Considerations
+
+- Redux (or any other state manager) structure of the calendar
+- The project is totally focused on the front-end; please ignore the back-end.
+- Keep your code versioned with Git
+- Feel free to use small helper libraries for:
+  - UI Elements.
+  - Date/Time handling.
+- You must create the calendar component yourself. Do not use calendar libraries like
+  FullCalendar or Bootstrap Calendar
+- If you use an external API, make sure to provide working API keys.
+
+---
+
+## Installation
+
+Run `npm install` from root folder.
 
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+**Note:** You will need a proxy to get rid of CORS errors while doing requests to weather api.
 
 ## Build
 
@@ -17,11 +57,3 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 ## Running unit tests
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
