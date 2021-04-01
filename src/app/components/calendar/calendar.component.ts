@@ -9,6 +9,8 @@ import * as moment from 'moment';
 import {
   EventDialogComponent,
   IDialogData,
+  IEventData,
+  IEventDialogResult,
 } from '../event-dialog/event-dialog.component';
 import { Store } from '@ngrx/store';
 
@@ -183,6 +185,11 @@ export class CalendarComponent implements OnInit {
     return value;
   }
 
+  /**
+   * Adds a new event to calendar
+   *
+   * @param value Data from day that triggered this action
+   */
   addEvent(value: IDayDetail) {
     // Setting current time for dialog
     const date = new Date();
@@ -193,19 +200,81 @@ export class CalendarComponent implements OnInit {
     const data: IDialogData = {
       selectedDate: moment(date),
     };
+    this.openDialog(data, value.id);
+  }
+
+  /**
+   * Edits an Event
+   *
+   * @param event the event to be updated
+   * @param dayId Day ID value from day that triggered this action
+   */
+  editEvent(event: IEventData, dayId: string) {
+    const data: IDialogData = {
+      selectedDate: moment.unix(event.id),
+      eventData: event,
+    };
+    this.openDialog(data, dayId);
+  }
+
+  /**
+   * Open Event dialog
+   *
+   * @param data Data to be used in dialog, whenEvent data is passed dialog
+   * changes action to EDIT
+   * @param dayId Day ID value from day that triggered this action
+   */
+  private openDialog(data: IDialogData, dayId: string) {
     const dialogRef = this.dialog.open(EventDialogComponent, {
       width: '400px',
       data,
     });
 
     dialogRef.afterClosed().subscribe({
-      next: (event) => {
-        if (event) {
+      next: (result: IEventDialogResult) => {
+        if (result) {
           const byMonthInfo: IMonthInfo = {
             monthId: this.calendar.currentMonth.monthId,
-            dayId: value.id,
+            dayId,
           };
-          this.store.dispatch(CalendarActions.newEvent({ event, byMonthInfo }));
+          if (result.action === 'CREATE') {
+            this.store.dispatch(
+              CalendarActions.newEvent({ event: result.event, byMonthInfo })
+            );
+          }
+
+          if (result.action === 'EDIT') {
+            // If event has changed date details
+            if (result.originalID !== result.event.id) {
+              this.store.dispatch(
+                CalendarActions.deleteEvent({
+                  id: result.originalID,
+                  byMonthInfo,
+                })
+              );
+
+              // Creating new monthInfo to update the event in calendar
+              const targetDate = moment.unix(result.event.id);
+              const updatedDateDetails = {
+                monthId: targetDate.format('MM/YYYY'),
+                dayId: `${targetDate.format('MM')}/${targetDate.format('D')}`,
+              };
+
+              this.store.dispatch(
+                CalendarActions.newEvent({
+                  event: result.event,
+                  byMonthInfo: updatedDateDetails,
+                })
+              );
+            } else {
+              // Simple changes in properties
+              this.store.dispatch(
+                CalendarActions.editEvent({
+                  event: result.event,
+                })
+              );
+            }
+          }
         }
       },
     });

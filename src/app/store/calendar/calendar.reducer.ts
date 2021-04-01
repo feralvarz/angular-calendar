@@ -26,6 +26,23 @@ const calendarReducer = createReducer(
     }
 
     return { ...state, events };
+  }),
+  on(CalendarActions.editEvent, (state, { event }) => {
+    const events = JsUtils.createCopy(state.events);
+    // Updates single changes in event
+    events.byId[event.id] = event;
+
+    return { ...state, events };
+  }),
+  on(CalendarActions.deleteEvent, (state, { id, byMonthInfo: info }) => {
+    const events = JsUtils.createCopy(state.events);
+    // Removes event from state
+    delete events.byId[id];
+
+    // Removes references to event in days
+    const index = events.byMonthId[info.monthId].days[info.dayId].indexOf(id);
+    events.byMonthId[info.monthId].days[info.dayId].splice(index, 1);
+    return { ...state, events };
   })
 );
 

@@ -3,6 +3,7 @@
   font-family: sans-serif;
   max-width: 1200px;
   margin: auto;
+  padding: 0 16px;
 
   nav {
     display: flex;
@@ -46,19 +47,46 @@
         background-color: rgba(#f0f0f0, 0.5);
       }
       &.current-month {
-        cursor: pointer;
+        position: relative;
+        .add-event {
+          cursor: pointer;
+          display: none;
+          position: absolute;
+          font-size: 24px;
+          right: 0px;
+          padding: 2px 8px;
+          color: #04415e;
+          top: 0;
+          transition: all 100ms ease-in-out;
+          &:hover {
+            color: #03a9f4;
+            transform: rotate(90deg);
+          }
+        }
+        &:hover {
+          .add-event {
+            display: inline-block;
+          }
+          .calendar-event:hover {
+            transform: scale(1.05);
+            box-shadow: 0 1px 4px 0px rgb(0 0 0 / 41%);
+          }
+        }
         ul {
-          padding: 0;
+          padding: 0 4px;
           max-height: 122px;
           overflow: auto;
-          li {
+          li.calendar-event {
+            cursor: pointer;
             background-color: #f4f4f6;
             box-shadow: 0 1px 3px 0px rgb(0 0 0 / 41%);
             list-style-type: none;
             padding: 4px;
             font-weight: normal;
+            transition: all 150ms ease-in-out;
             margin-bottom: 4px;
             position: relative;
+
             &::after {
               content: "";
               position: absolute;

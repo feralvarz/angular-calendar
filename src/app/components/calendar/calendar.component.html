@@ -21,15 +21,19 @@
 
     <li
       *ngFor="let current of calendar.currentMonth.days | keyvalue: unsorted"
-      (click)="addEvent(current.value)"
       class="current-month"
     >
-      <span>{{ current.value.dayNumber }}</span>
+      <div>
+        {{ current.value.dayNumber }}
+        <span class="add-event" (click)="addEvent(current.value)">+</span>
+      </div>
       <ng-container *ngIf="current.value.events as events">
         <ul>
           <li
+            class="calendar-event"
             *ngFor="let ev of events | sortBy: 'asc':'time'"
             [style.--bgcolor]="ev.color"
+            (click)="editEvent(ev, current.value.id)"
           >
             <div class="time">{{ ev.time }}</div>
             {{ ev.reminder }}

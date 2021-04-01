@@ -8,6 +8,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import * as moment from 'moment';
 
+type DialogAction = 'EDIT' | 'CREATE';
+
 export interface IEventData {
   id: number;
   reminder: string;
@@ -21,6 +23,12 @@ export interface IDialogData {
   eventData?: IEventData | null;
 }
 
+export interface IEventDialogResult {
+  action: DialogAction;
+  event: IEventData;
+  originalID: number;
+}
+
 @Component({
   selector: 'app-event-dialog',
   templateUrl: './event-dialog.component.html',
@@ -28,6 +36,8 @@ export interface IDialogData {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventDialogComponent implements OnInit {
+  dialogAction: DialogAction;
+
   /**
    * Form group
    */
@@ -60,6 +70,7 @@ export class EventDialogComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.dialogAction = this.data?.eventData ? 'EDIT' : 'CREATE';
     this.setupForm();
   }
 
@@ -84,7 +95,13 @@ export class EventDialogComponent implements OnInit {
       time,
     };
 
-    this.dialogRef.close(event);
+    const result: IEventDialogResult = {
+      action: this.dialogAction,
+      event,
+      originalID: this.data?.eventData?.id,
+    };
+
+    this.dialogRef.close(result);
   }
 
   /**
@@ -95,7 +112,7 @@ export class EventDialogComponent implements OnInit {
     const { reminder = '', city = '', color = this.defaultColor() } =
       this.data?.eventData || {};
 
-    const time = `${selectedDate.hour()}:${selectedDate.format('mm')}`;
+    const time = `${selectedDate.format('HH')}:${selectedDate.format('mm')}`;
 
     this.eventForm = this.formBuilder.group({
       reminder: [
