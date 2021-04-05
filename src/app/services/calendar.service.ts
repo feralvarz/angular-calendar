@@ -31,13 +31,13 @@ export interface ILocationWeather {
   providedIn: 'root',
 })
 export class CalendarService {
-  private readonly BASE = '//www.metaweather.com/api';
+  private readonly BASE = '//localhost:8080/api/';
   constructor(private httpClient: HttpClient) {}
 
   public getCities(query: string): Observable<ICity[]> {
-    const url = `${this.BASE}/location/search/`;
+    const url = `${this.BASE}/getCities`;
     const params = new HttpParams({
-      fromString: `query=${query}`,
+      fromString: `city=${query}`,
     });
     return this.httpClient
       .get<ICity[]>(url, { params })
@@ -45,35 +45,41 @@ export class CalendarService {
   }
 
   public getLocationWeather(woeid: number): Observable<ICurrentWeather> {
-    const url = `${this.BASE}/location/${woeid}`;
+    const url = `${this.BASE}/getLocationWeather`;
 
-    return this.httpClient.get<ILocationWeather>(url).pipe(
-      map((forecast) => {
-        const { consolidated_weather, title, parent, time } = forecast;
-        const {
-          weather_state_abbr,
-          weather_state_name,
-          the_temp,
-        } = consolidated_weather[0];
+    const params = new HttpParams({
+      fromString: `woeid=${woeid}`,
+    });
 
-        return {
-          title,
-          weather: weather_state_name,
-          temperature: the_temp,
-          time,
-          parent: parent.title,
-          icon: `//www.metaweather.com/static/img/weather/png/64/${weather_state_abbr}.png`,
-          alt: `Icon showing weather conditions ${weather_state_name} in ${title}`,
-        };
-      }),
-      catchError(() =>
-        of({
-          title: 'Location not found',
-          weather: null,
-          icon: null,
-          alt: null,
-        })
-      )
-    );
+    return this.httpClient
+      .get<ILocationWeather>(url, { params })
+      .pipe(
+        map((forecast) => {
+          const { consolidated_weather, title, parent, time } = forecast;
+          const {
+            weather_state_abbr,
+            weather_state_name,
+            the_temp,
+          } = consolidated_weather[0];
+
+          return {
+            title,
+            weather: weather_state_name,
+            temperature: the_temp,
+            time,
+            parent: parent.title,
+            icon: `/assets/icons/${weather_state_abbr}.svg`,
+            alt: `Icon showing weather conditions ${weather_state_name} in ${title}`,
+          };
+        }),
+        catchError(() =>
+          of({
+            title: 'Location not found',
+            weather: null,
+            icon: null,
+            alt: null,
+          })
+        )
+      );
   }
 }
