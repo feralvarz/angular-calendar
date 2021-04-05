@@ -31,7 +31,7 @@ export interface ILocationWeather {
   providedIn: 'root',
 })
 export class CalendarService {
-  private readonly BASE = '//localhost:8080/api/';
+  private readonly BASE = '//localhost:8080/api';
   constructor(private httpClient: HttpClient) {}
 
   public getCities(query: string): Observable<ICity[]> {
